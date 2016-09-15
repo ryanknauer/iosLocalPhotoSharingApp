@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		09ACD8E05A93E78A17DDBB59 /* Pods_CameraExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E5D4281EDEFE48ECE549FC /* Pods_CameraExampleUITests.framework */; };
 		61859AFAC2F4CA2D596A3785 /* Pods_CameraExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC7705F516A26952A405FCC6 /* Pods_CameraExampleTests.framework */; };
+		A840A3961D8AA12E00C12567 /* userClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A840A3951D8AA12E00C12567 /* userClass.swift */; };
 		A84543031D69095C00A87648 /* ViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543021D69095C00A87648 /* ViewController2.swift */; };
 		A84543051D69933F00A87648 /* QueueDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543041D69933F00A87648 /* QueueDefinition.swift */; };
 		A84543061D69933F00A87648 /* QueueDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543041D69933F00A87648 /* QueueDefinition.swift */; };
@@ -51,6 +52,7 @@
 		6942EADC8277F585F0C60810 /* Pods-CameraExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-CameraExample/Pods-CameraExample.release.xcconfig"; sourceTree = "<group>"; };
 		76F4B8A309041B94FE890247 /* Pods-CameraExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CameraExampleTests/Pods-CameraExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		8268C32B0CCB18C45FA5D0B6 /* Pods_CameraExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CameraExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A840A3951D8AA12E00C12567 /* userClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = userClass.swift; sourceTree = "<group>"; };
 		A84543021D69095C00A87648 /* ViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
 		A84543041D69933F00A87648 /* QueueDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueDefinition.swift; sourceTree = "<group>"; };
 		A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupImagesFromServer.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				A84543021D69095C00A87648 /* ViewController2.swift */,
+				A840A3951D8AA12E00C12567 /* userClass.swift */,
 				A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */,
 				A895A6DF1D2DB91800F85476 /* AppDelegate.swift */,
 				A895A6E11D2DB91800F85476 /* ViewController.swift */,
@@ -447,6 +450,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A840A3961D8AA12E00C12567 /* userClass.swift in Sources */,
 				A84543081D69A6C500A87648 /* SetupImagesFromServer.swift in Sources */,
 				A8BC75A21D7A0D2400E4AA63 /* commentsViewController.swift in Sources */,
 				A895A6E21D2DB91800F85476 /* ViewController.swift in Sources */,

@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 import Alamofire
 
+var User : userClass!
+let baseHTTPURL: String = "http://128.189.225.81:8000/"// My home IP URL "http://192.168.0.110:8000/"
 
 class ViewController: UIViewController {
 
@@ -53,7 +55,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        User = userClass(username: "ryan", pswd: "asdf1234")
         selectBackCamera()
         hideTakenPictureView(true)
         uploadedLabel.hidden = true
@@ -268,15 +270,21 @@ class ViewController: UIViewController {
 
         let data = imageData
         var parameters = [String:String]()
-        parameters = [
-            "Latitude": "12.3",
-            "Longitude": "12.54"
-        ]
+        if let lat = User.latitude, lon = User.longitude{
+            print(lat, lon)
+            parameters = [
+                "Latitude": "\(lat)",
+                "Longitude": "\(lon)"
+            ]
+        } else{
+            print("location not found!")
+            //todo!!!
+        }
         
-        let URL = "http://192.168.0.110:8000/quickstart/" //"http://127.0.0.1:8000/quickstart/"
+        let URL = baseHTTPURL + "quickstart/" //"http://127.0.0.1:8000/quickstart/"
  
         
-        Alamofire.upload(.POST, URL, headers: headers, multipartFormData: {
+        Alamofire.upload(.POST, URL, headers: User.headers, multipartFormData: {
             multipartFormData in
                 multipartFormData.appendBodyPart(data: data!, name: "photo", fileName: "testing.jpeg", mimeType: "image/jpeg")
             
