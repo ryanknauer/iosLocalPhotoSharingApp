@@ -16,19 +16,15 @@ class ViewController2: UIViewController {
     
     @IBOutlet var votesLabel: UILabel!
 
-    @IBOutlet var ImageView1: UIImageView!
-
+    @IBOutlet var ImageViewButton: UIButton!
+    
     @IBOutlet var sortingSegmentedControl: UISegmentedControl!
-    
-    @IBOutlet var upVoteButton: UIButton!
-    
-    @IBOutlet var downVoteButton: UIButton!
     
     @IBOutlet var commentsButton: UIButton!
     
-    @IBOutlet var nextPictureButton: UIButton!
-    
     @IBOutlet var refreshButton: UIButton!
+    
+    var buttonImageView = UIButton(type: UIButtonType.Custom) as UIButton
     
 
     
@@ -48,10 +44,22 @@ class ViewController2: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        buttonImageView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
+        buttonImageView.addTarget(self, action: "nextPhotoButton:", forControlEvents: UIControlEvents.TouchUpInside)
+        buttonImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        self.view.addSubview(buttonImageView)
+        self.view.sendSubviewToBack(buttonImageView)
+        
+        var upSwipe = UISwipeGestureRecognizer(target: self, action: "upVoteButtonPressed:")
+        var downSwipe = UISwipeGestureRecognizer(target: self, action: "downVoteButtonPressed:")
+        upSwipe.direction = .Up
+        downSwipe.direction = .Down
+        view.addGestureRecognizer(upSwipe)
+        view.addGestureRecognizer(downSwipe)
+        
         setupImagesFromServer()
-        self.ImageView1.contentMode = UIViewContentMode.ScaleAspectFill
     }
-    
+        
     
     @IBAction func unwindToVC(segue: UIStoryboardSegue) {
         hideAllButtons(false)
@@ -66,7 +74,8 @@ class ViewController2: UIViewController {
             let url = NSURL(string:URL)
             let data = NSData(contentsOfURL:url!)
             if data != nil {
-                ImageView1.image = UIImage(data:data!)
+                buttonImageView.setImage(UIImage(data:data!), forState: UIControlState.Normal)
+                buttonImageView.setImage(UIImage(data:data!), forState: UIControlState.Highlighted)
                 let votes = currentImageViewNode?.votes
                 votesLabel.text = String(votes!)
                 setVoteColor()
@@ -128,7 +137,7 @@ class ViewController2: UIViewController {
     
     
 // string "up/down/-up/-down/" is what is appended to url to change votes - indicates subtracting 1 if already up/down voted by user
-    @IBAction func downVoteButtonPressed(sender: UIButton) {
+    @IBAction func downVoteButtonPressed(sender: AnyObject) {
         if let votes = currentImageViewNode?.votes{
             switch currentImageViewNode.voteButtonPressed{
             case .down:
@@ -152,7 +161,9 @@ class ViewController2: UIViewController {
     }
     
     
-    @IBAction func upVoteButtonPressed(sender: UIButton) {
+    
+    
+    @IBAction func upVoteButtonPressed(sender: AnyObject) {
         if let votes = currentImageViewNode?.votes{
             switch currentImageViewNode.voteButtonPressed{
             case .up:
@@ -196,16 +207,10 @@ class ViewController2: UIViewController {
         switch currentImageViewNode.voteButtonPressed{
         case .up:
             votesLabel.textColor = upVoteColor
-            upVoteButton.setTitleColor(upVoteColor, forState: UIControlState.Normal)
-            downVoteButton.setTitleColor(baseColor, forState: UIControlState.Normal)
         case .down:
             votesLabel.textColor = downVoteColor
-            upVoteButton.setTitleColor(baseColor, forState: UIControlState.Normal)
-            downVoteButton.setTitleColor(downVoteColor, forState: UIControlState.Normal)
         case .none:
             votesLabel.textColor = baseColor
-            upVoteButton.setTitleColor(baseColor, forState: UIControlState.Normal)
-            downVoteButton.setTitleColor(baseColor, forState: UIControlState.Normal)
         }
         
     }
@@ -237,10 +242,7 @@ class ViewController2: UIViewController {
     
     
     func hideAllButtons(bool: Bool){
-        upVoteButton.hidden = bool
-        downVoteButton.hidden = bool
         commentsButton.hidden = bool
-        nextPictureButton.hidden = bool
         refreshButton.hidden = bool
         votesLabel.hidden = bool
         sortingSegmentedControl.hidden = bool
@@ -262,38 +264,7 @@ class ViewController2: UIViewController {
 
 
 
-class imageNode{
-    var imageURL: String?
-    var id: Int!
-    var rank: Int!
-    var votes: Int!
-    var upVotes: NSArray
-    var downVotes: NSArray
-    var voteButtonPressed: votePressed = .none
-    enum votePressed{
-        case up
-        case down
-        case none
-    }
-    
-    init(imgURL: String, idNum: Int, rankNum: Int, votesNum: Int, upVoted: NSArray, downVoted: NSArray){
-        imageURL = imgURL
-        id = idNum
-        rank = rankNum
-        votes = votesNum
-        upVotes = upVoted
-        downVotes = downVoted
-        updateVotePressed()
-    }
-    
-    func updateVotePressed(){
-        if upVotes.containsObject(User){
-            voteButtonPressed = .up
-        }else if downVotes.containsObject(User){
-            voteButtonPressed = .down
-        }
-    }
-}
+
 
 
 

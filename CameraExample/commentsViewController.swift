@@ -87,7 +87,7 @@ class commentsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func updateArray(){
-        let URL = "http://192.168.0.110:8000/comments/" + snippetID + "/"
+        let URL = baseHTTPURL + "comments/" + snippetID + "/"
         Alamofire.request(.GET,  URL, headers: User.headers)
             .responseJSON { response in
                 print(response.request)  // original URL request
@@ -151,7 +151,7 @@ class commentsViewController: UIViewController, UITableViewDelegate, UITableView
             let params: [String:AnyObject] = [
                 "comment" : comment
             ]
-            let URL = "http://192.168.0.110:8000/comments/" + snippetID + "/"
+            let URL =  baseHTTPURL + "comments/" + snippetID + "/"
             Alamofire.request(.POST, URL, headers: User.headers, parameters: params)
                 .responseJSON { response in
                     print(response.request)  // original URL request

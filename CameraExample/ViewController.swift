@@ -11,7 +11,7 @@ import AVFoundation
 import Alamofire
 
 var User : userClass!
-let baseHTTPURL: String = "http://128.189.225.81:8000/"// My home IP URL "http://192.168.0.110:8000/"
+let baseHTTPURL: String = "http://128.189.86.246:8000/"// My home IP URL "http://192.168.0.110:8000/"
 
 class ViewController: UIViewController {
 
@@ -46,6 +46,10 @@ class ViewController: UIViewController {
     
     @IBOutlet var uploadPhotoButton: UIButton!
     
+    var doubleTapToFlip: UITapGestureRecognizer!
+    
+
+    
     enum CameraType {
         case front
         case back
@@ -55,10 +59,16 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         User = userClass(username: "ryan", pswd: "asdf1234")
+        
+        doubleTapToFlip = UITapGestureRecognizer(target: self, action: "flipPressed:")
+        doubleTapToFlip.numberOfTapsRequired = 2
+
         selectBackCamera()
         hideTakenPictureView(true)
         uploadedLabel.hidden = true
+    
         beginSession()
     }
     
@@ -253,6 +263,12 @@ class ViewController: UIViewController {
     func hideTakenPictureView(bool: Bool){
         cancelPhotoButton.hidden = bool
         uploadPhotoButton.hidden = bool
+        if bool{
+            self.view.addGestureRecognizer(doubleTapToFlip)
+        }else{
+            self.view.removeGestureRecognizer(doubleTapToFlip)
+        }
+        
     }
     
     
@@ -320,7 +336,7 @@ class ViewController: UIViewController {
         return data
     }
     
-
+    
 
     
 }
