@@ -26,8 +26,6 @@ class ViewController2: UIViewController {
     
     var buttonImageView = UIButton(type: UIButtonType.Custom) as UIButton
     
-
-    
     enum sortingStyles: String{
         case top = "top"
         case new = "new"
