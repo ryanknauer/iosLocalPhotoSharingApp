@@ -12,7 +12,7 @@ import Alamofire
 
 
 
-class ViewController2: UIViewController {
+class ViewController2: UIViewController, ViewController2Delegate {
     
     @IBOutlet var votesLabel: UILabel!
 
@@ -32,6 +32,7 @@ class ViewController2: UIViewController {
     }
     
     var imageViewQueue: Queue<imageNode> = Queue<imageNode>()
+    var nextImageViewNode: imageNode?
     var currentImageViewNode: imageNode!
     var sortingMethod: sortingStyles = .top
     let upVoteColor = UIColor.orangeColor()
@@ -44,16 +45,18 @@ class ViewController2: UIViewController {
         super.viewDidLoad()
         buttonImageView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
         buttonImageView.addTarget(self, action: "nextPhotoButton:", forControlEvents: UIControlEvents.TouchUpInside)
-        buttonImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        //buttonImageView.view.contentMode = UIViewContentMode.ScaleAspectFill
+        buttonImageView.imageView?.contentMode = UIViewContentMode.ScaleAspectFill
         self.view.addSubview(buttonImageView)
         self.view.sendSubviewToBack(buttonImageView)
         
-        var upSwipe = UISwipeGestureRecognizer(target: self, action: "upVoteButtonPressed:")
-        var downSwipe = UISwipeGestureRecognizer(target: self, action: "downVoteButtonPressed:")
+        let upSwipe = UISwipeGestureRecognizer(target: self, action: "upVoteButtonPressed:")
+        let downSwipe = UISwipeGestureRecognizer(target: self, action: "downVoteButtonPressed:")
         upSwipe.direction = .Up
         downSwipe.direction = .Down
         view.addGestureRecognizer(upSwipe)
         view.addGestureRecognizer(downSwipe)
+        
         
         setupImagesFromServer()
     }
@@ -66,22 +69,65 @@ class ViewController2: UIViewController {
     
 
     func bringUpTopImage(){
-        currentImageViewNode = imageViewQueue.deQueue()
-        if let URL = currentImageViewNode?.imageURL{
-            print(URL)
-            let url = NSURL(string:URL)
-            let data = NSData(contentsOfURL:url!)
-            if data != nil {
-                buttonImageView.setImage(UIImage(data:data!), forState: UIControlState.Normal)
-                buttonImageView.setImage(UIImage(data:data!), forState: UIControlState.Highlighted)
-                let votes = currentImageViewNode?.votes
-                votesLabel.text = String(votes!)
-                setVoteColor()
+        if nextImageViewNode != nil{ // TODO Design What happens with Nil ImageView
+            currentImageViewNode = nextImageViewNode!
+            currentImageViewNode.delegate = self
+            currentImageViewNode.isCurrentImageNode = true
+            nextImageViewNode = imageViewQueue.deQueue()
+            nextImageViewNode?.downloadTopImage()
+            
+            
+            switch currentImageViewNode.status{
+            case .complete:
+                updateTopImage()
+            case .loading:
+                // todo !!! Loading default
+                print("loading image")
+            case .failed:
+                // todo !!! failed defualt
+                print("failed to load image")
             }
         }
-        
+    
     }
-
+    
+    
+    func updateTopImage(){
+        print("updateTopCalled")
+        if let data = currentImageViewNode.imageData{
+            buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Normal)
+            buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Highlighted)
+            let votes = currentImageViewNode?.votes
+            votesLabel.text = String(votes!)
+            setVoteColor()
+        }
+    }
+    
+    
+    
+    
+    
+    
+//    func bringUpTopImage(){
+//        currentImageViewNode = imageViewQueue.deQueue()
+//        currentImageViewNode.downloadTopImage()
+//        
+//        if let URL = currentImageViewNode?.imageURL{
+//            print(URL)
+//            let url = NSURL(string:URL)
+//            let data = NSData(contentsOfURL:url!)
+//            if data != nil {
+//                buttonImageView.setImage(UIImage(data:data!), forState: UIControlState.Normal)
+//                buttonImageView.setImage(UIImage(data:data!), forState: UIControlState.Highlighted)
+//                let votes = currentImageViewNode?.votes
+//                votesLabel.text = String(votes!)
+//                setVoteColor()
+//            }
+//        }
+//    }
+//    
+    
+    
     
     
     func setupImagesFromServer() {
@@ -96,7 +142,7 @@ class ViewController2: UIViewController {
                     print(response.data)     // server data
                     print(response.result)   // result of response serialization
                     self.deSerializeJson(response.data)
-                    self.bringUpTopImage()
+                    
         }
     }
     
@@ -122,6 +168,10 @@ class ViewController2: UIViewController {
         catch{
             print("Json Error: \(error)")
         }
+        
+        nextImageViewNode = imageViewQueue.deQueue()
+        nextImageViewNode?.downloadTopImage()
+        self.bringUpTopImage()
         
     }
     
@@ -235,6 +285,8 @@ class ViewController2: UIViewController {
     
     @IBAction func resetButtonPressed(sender: UIButton) {
         imageViewQueue = Queue<imageNode>()
+        currentImageViewNode = nil
+        nextImageViewNode = nil
         setupImagesFromServer()
     }
     
