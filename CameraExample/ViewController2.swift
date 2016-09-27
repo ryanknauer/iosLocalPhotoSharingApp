@@ -1,4 +1,5 @@
-   //  ViewController2.swift
+
+//  ViewController2.swift
 //  CameraExample
 //
 //  Created by Ryan Knauer on 8/20/16.
@@ -38,7 +39,7 @@ class ViewController2: UIViewController, ViewController2Delegate {
     let upVoteColor = UIColor.orangeColor()
     let downVoteColor = UIColor.lightGrayColor()
     let baseColor = UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 1.0)
-
+    
     
     
     override func viewDidLoad() {
@@ -52,6 +53,7 @@ class ViewController2: UIViewController, ViewController2Delegate {
         
         let upSwipe = UISwipeGestureRecognizer(target: self, action: "upVoteButtonPressed:")
         let downSwipe = UISwipeGestureRecognizer(target: self, action: "downVoteButtonPressed:")
+        
         upSwipe.direction = .Up
         downSwipe.direction = .Down
         view.addGestureRecognizer(upSwipe)
@@ -93,10 +95,11 @@ class ViewController2: UIViewController, ViewController2Delegate {
     
     
     func updateTopImage(){
-        print("updateTopCalled")
-        if let data = currentImageViewNode.imageData{
+        
+        if let data = currentImageViewNode?.imageData{
             buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Normal)
             buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Highlighted)
+            buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Disabled)
             let votes = currentImageViewNode?.votes
             votesLabel.text = String(votes!)
             setVoteColor()
@@ -177,7 +180,7 @@ class ViewController2: UIViewController, ViewController2Delegate {
     
     
     @IBAction func nextPhotoButton(sender: UIButton) {
-        self.bringUpTopImage()
+            self.bringUpTopImage()
     }
     
     

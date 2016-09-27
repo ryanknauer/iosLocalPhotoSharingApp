@@ -11,11 +11,10 @@ import AVFoundation
 import Alamofire
 
 var User : userClass!
-let baseHTTPURL: String = "http://192.168.0.110:8000/" //"http://128.189.86.246:8000/" My home IP URL "http://192.168.0.110:8000/"
+let baseHTTPURL: String = "http://192.168.0.110:8000/" //"http://128.189.85.73:8000/" //"http://128.189.86.246:8000/" //"http://172.20.10.3:8000/"  //"http://192.168.0.110:8000/"   "http://192.168.0.110:8000/"
 
 class ViewController: UIViewController {
 
-    
     var captureSession = AVCaptureSession()
     
     var captureDevice: AVCaptureDevice?
