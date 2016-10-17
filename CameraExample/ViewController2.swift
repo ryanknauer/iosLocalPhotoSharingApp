@@ -7,7 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
 import Alamofire
+import AssetsLibrary
 
 
 
@@ -25,6 +27,9 @@ class ViewController2: UIViewController, ViewController2Delegate {
     
     @IBOutlet var refreshButton: UIButton!
     
+    var player: AVPlayer?
+    var playerLayer: AVPlayerLayer!
+    
     var buttonImageView = UIButton(type: UIButtonType.Custom) as UIButton
     
     enum sortingStyles: String{
@@ -32,22 +37,24 @@ class ViewController2: UIViewController, ViewController2Delegate {
         case new = "new"
     }
     
-    var imageViewQueue: Queue<imageNode> = Queue<imageNode>()
-    var nextImageViewNode: imageNode?
-    var currentImageViewNode: imageNode!
+    var imageViewQueue: Queue<mediaNode> = Queue<mediaNode>()
+    var nextImageViewNode: mediaNode?
+    var currentImageViewNode: mediaNode!
     var sortingMethod: sortingStyles = .top
     let upVoteColor = UIColor.orangeColor()
     let downVoteColor = UIColor.lightGrayColor()
     let baseColor = UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 1.0)
+    let loadQueueSize = 2
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupButtons()
         buttonImageView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
         buttonImageView.addTarget(self, action: "nextPhotoButton:", forControlEvents: UIControlEvents.TouchUpInside)
-        //buttonImageView.view.contentMode = UIViewContentMode.ScaleAspectFill
         buttonImageView.imageView?.contentMode = UIViewContentMode.ScaleAspectFill
+        buttonImageView.backgroundColor = UIColor.blackColor()
         self.view.addSubview(buttonImageView)
         self.view.sendSubviewToBack(buttonImageView)
         
@@ -59,6 +66,10 @@ class ViewController2: UIViewController, ViewController2Delegate {
         view.addGestureRecognizer(upSwipe)
         view.addGestureRecognizer(downSwipe)
         
+        
+        //playerLayer = CALayer()
+        
+        //buttonImageView.layer.addSublayer(playerLayer)
         
         setupImagesFromServer()
     }
@@ -74,14 +85,14 @@ class ViewController2: UIViewController, ViewController2Delegate {
         if nextImageViewNode != nil{ // TODO Design What happens with Nil ImageView
             currentImageViewNode = nextImageViewNode!
             currentImageViewNode.delegate = self
-            currentImageViewNode.isCurrentImageNode = true
+            currentImageViewNode.isCurrentMediaNode = true
             nextImageViewNode = imageViewQueue.deQueue()
             nextImageViewNode?.downloadTopImage()
             
             
             switch currentImageViewNode.status{
             case .complete:
-                updateTopImage()
+                updateTopNode()
             case .loading:
                 // todo !!! Loading default
                 print("loading image")
@@ -93,18 +104,64 @@ class ViewController2: UIViewController, ViewController2Delegate {
     
     }
     
+    func updateTopNode(){
+        if let type = currentImageViewNode?.medType{
+            switch type{
+            case .image:
+                updateTopImage()
+            case .video:
+                updateTopVideo()
+            }
+        }
+    }
     
     func updateTopImage(){
         
-        if let data = currentImageViewNode?.imageData{
-            buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Normal)
-            buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Highlighted)
-            buttonImageView.setImage(UIImage(data:data), forState: UIControlState.Disabled)
+        if let data = currentImageViewNode?.mediaData{
+              playerLayer?.removeFromSuperlayer()
+              setImageForAllStates(UIImage(data: data))
+            
+            
+            
             let votes = currentImageViewNode?.votes
             votesLabel.text = String(votes!)
             setVoteColor()
         }
     }
+    
+    func setImageForAllStates(image: UIImage?){
+        buttonImageView.setImage(image, forState: UIControlState.Normal)
+        buttonImageView.setImage(image, forState: UIControlState.Highlighted)
+        buttonImageView.setImage(image, forState: UIControlState.Disabled)
+    }
+    
+    func updateTopVideo(){
+        if let data = currentImageViewNode?.mediaData{
+            print(buttonImageView.layer.sublayers?.count)
+            
+            let URL = currentImageViewNode.pathToDownloadedMedia.currentVideoURL
+            setImageForAllStates(nil)
+            
+            
+            let player2 = AVPlayer(URL: URL)
+            let plLayer = AVPlayerLayer(player: player2)
+            plLayer.frame = buttonImageView.bounds
+            plLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "loopVideo:",
+                name: AVPlayerItemDidPlayToEndTimeNotification,
+                object: self.playerLayer?.player?.currentItem)
+            
+            playerLayer?.removeFromSuperlayer()
+            playerLayer = plLayer
+            buttonImageView.layer.addSublayer(playerLayer)
+            
+            print(buttonImageView.layer.sublayers?.count)
+            player2.play()
+
+        }
+    }
+    
+    
     
     
     
@@ -150,8 +207,20 @@ class ViewController2: UIViewController, ViewController2Delegate {
     }
     
     
+    func mediaTypeFromString(string: String) -> mediaType{
+        if string == "image"{
+            return mediaType.image
+        } else if string == "video"{
+            return mediaType.video
+        } else{
+            print("Something is wrong")
+            return mediaType.image
+        }
+    }
+    
     
     func deSerializeJson(data: NSData?){
+        var loadPathNum = 0;
         do {
             let JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
             if let snippets = JSON as? [[String: AnyObject]] {
@@ -162,7 +231,10 @@ class ViewController2: UIViewController, ViewController2Delegate {
                         let votes: Int? = snippet["votes"]?.integerValue
                         let upVoted = snippet["upVotes"] as! NSArray
                         let downVoted = snippet["downVotes"] as! NSArray
-                        imageViewQueue.enQueue((imageNode(imgURL: imageURL, idNum: id!, rankNum: rank!, votesNum: votes!, upVoted: upVoted, downVoted: downVoted)))
+                        let dataType = snippet["mediaType"] as! String
+                        let mType = mediaTypeFromString(dataType)
+                        loadPathNum = loadQueueSize % (loadPathNum + 1)
+                        imageViewQueue.enQueue((mediaNode(medURL: imageURL, idNum: id!, rankNum: rank!, votesNum: votes!, upVoted: upVoted, downVoted: downVoted, mType: mType, loadPN: String(loadPathNum))))
                     }
                 }
             }
@@ -175,7 +247,6 @@ class ViewController2: UIViewController, ViewController2Delegate {
         nextImageViewNode = imageViewQueue.deQueue()
         nextImageViewNode?.downloadTopImage()
         self.bringUpTopImage()
-        
     }
     
     
@@ -287,7 +358,7 @@ class ViewController2: UIViewController, ViewController2Delegate {
     
     
     @IBAction func resetButtonPressed(sender: UIButton) {
-        imageViewQueue = Queue<imageNode>()
+        imageViewQueue = Queue<mediaNode>()
         currentImageViewNode = nil
         nextImageViewNode = nil
         setupImagesFromServer()
@@ -311,7 +382,22 @@ class ViewController2: UIViewController, ViewController2Delegate {
         }
     }
     
+    
+    
+    func setupButtons(){
+        //refreshButton.titleLabel?.hidden = true
+        //var image = UIImage(named: "RefreshButton")
+        //image.size = CGSize(width: image.size.width / 1.5, height: image.size.height / 1.5)
+        //refreshButton.setImage(image, forState: .Normal)
+    }
+    
+    func loopVideo(notification: NSNotification) {
+        self.playerLayer.player?.seekToTime(kCMTimeZero)
+        self.playerLayer.player?.play()
+    }
+    
 
+    
 }
 
 

@@ -16,6 +16,8 @@
 		A84543061D69933F00A87648 /* QueueDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543041D69933F00A87648 /* QueueDefinition.swift */; };
 		A84543081D69A6C500A87648 /* SetupImagesFromServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */; };
 		A84543091D69A6C500A87648 /* SetupImagesFromServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */; };
+		A8849BD51DA83E11008376B7 /* videoDirectory in Resources */ = {isa = PBXBuildFile; fileRef = A8849BD41DA83E11008376B7 /* videoDirectory */; };
+		A8849BD71DA8413A008376B7 /* videoClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8849BD61DA8413A008376B7 /* videoClass.swift */; };
 		A895A6E01D2DB91800F85476 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A895A6DF1D2DB91800F85476 /* AppDelegate.swift */; };
 		A895A6E21D2DB91800F85476 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A895A6E11D2DB91800F85476 /* ViewController.swift */; };
 		A895A6E51D2DB91800F85476 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A895A6E31D2DB91800F85476 /* Main.storyboard */; };
@@ -58,6 +60,8 @@
 		A84543021D69095C00A87648 /* ViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
 		A84543041D69933F00A87648 /* QueueDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueDefinition.swift; sourceTree = "<group>"; };
 		A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupImagesFromServer.swift; sourceTree = "<group>"; };
+		A8849BD41DA83E11008376B7 /* videoDirectory */ = {isa = PBXFileReference; lastKnownFileType = folder; name = videoDirectory; path = ../videoDirectory; sourceTree = "<group>"; };
+		A8849BD61DA8413A008376B7 /* videoClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = videoClass.swift; sourceTree = "<group>"; };
 		A895A6DC1D2DB91800F85476 /* CameraExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A895A6DF1D2DB91800F85476 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A895A6E11D2DB91800F85476 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +147,7 @@
 		A895A6DE1D2DB91800F85476 /* CameraExample */ = {
 			isa = PBXGroup;
 			children = (
+				A8849BD41DA83E11008376B7 /* videoDirectory */,
 				A84543021D69095C00A87648 /* ViewController2.swift */,
 				A840A3971D8BBADA00C12567 /* imageNode.swift */,
 				A840A3951D8AA12E00C12567 /* userClass.swift */,
@@ -156,6 +161,7 @@
 				A895A6E61D2DB91800F85476 /* Assets.xcassets */,
 				A895A6E81D2DB91800F85476 /* LaunchScreen.storyboard */,
 				A895A6EB1D2DB91800F85476 /* Info.plist */,
+				A8849BD61DA8413A008376B7 /* videoClass.swift */,
 			);
 			path = CameraExample;
 			sourceTree = "<group>";
@@ -305,6 +311,7 @@
 			files = (
 				A895A6EA1D2DB91800F85476 /* LaunchScreen.storyboard in Resources */,
 				A895A6E71D2DB91800F85476 /* Assets.xcassets in Resources */,
+				A8849BD51DA83E11008376B7 /* videoDirectory in Resources */,
 				A895A6E51D2DB91800F85476 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -461,6 +468,7 @@
 				A8F84D621D738BBD001A5B55 /* PageViewController.swift in Sources */,
 				A840A3981D8BBADA00C12567 /* imageNode.swift in Sources */,
 				A84543051D69933F00A87648 /* QueueDefinition.swift in Sources */,
+				A8849BD71DA8413A008376B7 /* videoClass.swift in Sources */,
 				A84543031D69095C00A87648 /* ViewController2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -37,13 +37,6 @@
                                     <action selector="flipPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="weB-y0-sEz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hDu-66-UYQ">
-                                <rect key="frame" x="262" y="514" width="77" height="30"/>
-                                <state key="normal" title="Take Photo"/>
-                                <connections>
-                                    <action selector="photoButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="W3T-Q8-tnC"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2mM-fI-BUL">
                                 <rect key="frame" x="28" y="20" width="30" height="30"/>
                                 <state key="normal" title="X"/>
@@ -64,6 +57,20 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D0U-t2-8dU">
+                                <rect key="frame" x="37" y="514" width="71" height="30"/>
+                                <state key="normal" title="TakeVideo"/>
+                                <connections>
+                                    <action selector="takeVideoPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7uO-Ei-5gk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hDu-66-UYQ">
+                                <rect key="frame" x="262" y="514" width="77" height="30"/>
+                                <state key="normal" title="Take Photo"/>
+                                <connections>
+                                    <action selector="photoButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="W3T-Q8-tnC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -71,10 +78,12 @@
                             <constraint firstItem="KXX-Bv-tfd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-25" id="6pU-M8-LDD"/>
                             <constraint firstItem="q26-nq-etG" firstAttribute="trailing" secondItem="0mf-2r-mn6" secondAttribute="trailing" id="CCa-Ll-qpH"/>
                             <constraint firstItem="0mf-2r-mn6" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Dzv-bP-iO9"/>
+                            <constraint firstItem="D0U-t2-8dU" firstAttribute="top" secondItem="KXX-Bv-tfd" secondAttribute="bottom" constant="-86" id="MmN-xq-PHP"/>
                             <constraint firstItem="hDu-66-UYQ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="NEh-YW-XPv"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="hDu-66-UYQ" secondAttribute="bottom" constant="56" id="Oqc-X2-dfF"/>
                             <constraint firstItem="q26-nq-etG" firstAttribute="top" secondItem="KXX-Bv-tfd" secondAttribute="bottom" constant="-86" id="QrC-9H-SRj"/>
                             <constraint firstItem="QfX-2u-uDx" firstAttribute="centerY" secondItem="KXX-Bv-tfd" secondAttribute="centerY" id="WLq-Ye-pbs"/>
+                            <constraint firstItem="KXX-Bv-tfd" firstAttribute="leading" secondItem="D0U-t2-8dU" secondAttribute="trailing" constant="-113" id="WjB-SH-Mrj"/>
                             <constraint firstItem="KXX-Bv-tfd" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="ZPt-fz-ujC"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0mf-2r-mn6" secondAttribute="trailing" constant="20" id="b0q-xB-pgT"/>
                             <constraint firstItem="q26-nq-etG" firstAttribute="leading" secondItem="KXX-Bv-tfd" secondAttribute="trailing" constant="-94" id="bp1-AN-Rb6"/>
@@ -87,6 +96,7 @@
                         <outlet property="cancelPhotoButton" destination="2mM-fI-BUL" id="kLL-dc-gna"/>
                         <outlet property="flipButton" destination="0mf-2r-mn6" id="Ouu-yf-unX"/>
                         <outlet property="takePhotoButton" destination="hDu-66-UYQ" id="MEn-fs-xHs"/>
+                        <outlet property="takeVideoButton" destination="D0U-t2-8dU" id="U1U-OT-YO6"/>
                         <outlet property="takenImageView" destination="KXX-Bv-tfd" id="sHp-im-Lal"/>
                         <outlet property="uploadPhotoButton" destination="q26-nq-etG" id="hZ8-mi-XOU"/>
                         <outlet property="uploadedLabel" destination="QfX-2u-uDx" id="vwD-ud-cnB"/>
