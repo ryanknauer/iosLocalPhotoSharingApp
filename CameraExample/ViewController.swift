@@ -42,7 +42,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     var medType : mediaType!
     
-    let videoMaxTimeInSeconds : Double = 8
+    let videoMaxTimeInSeconds : Double = 8.0
+    
+    let videoOrImageDelayInMSec : UInt64 = 500
+    
+    let minVideoLengthInSeconds : Double = 1.0
     
     @IBOutlet var uploadedLabel: UILabel!
    
@@ -55,8 +59,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     @IBOutlet var cancelPhotoButton: UIButton!
     
     @IBOutlet var uploadPhotoButton: UIButton!
-    
-    @IBOutlet var takeVideoButton: UIButton!
+
     
     var doubleTapToFlip: UITapGestureRecognizer!
     
@@ -64,12 +67,20 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     var takingVideo: Bool = false
     
+    var camera = CameraType.back
+    
+    var startTakingVideoBlock: dispatch_block_t!
+    
+    var videoTimedOutBlock: dispatch_block_t!
+    
+    var videoTooShort : Bool = true
+    
     enum CameraType {
         case front
         case back
     }
     
-    var camera = CameraType.back
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +96,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         setupButtons()
         
+        
+
         
 
         selectBackCamera()
@@ -153,12 +166,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     func videoTaken() {
         videoData.clearCurrentVideoPath()
-        self.videoOutput?.startRecordingToOutputFileURL(videoData.currentVideoURL, recordingDelegate: videoDelegate)
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(videoMaxTimeInSeconds * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+        
+        videoTimedOutBlock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS){
             if self.takingVideo{
-                self.takeVideoPressed(nil)
+                self.photoButtonPressed(nil)
             }
         }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(videoMaxTimeInSeconds * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), videoTimedOutBlock)
+        
+        self.videoOutput?.startRecordingToOutputFileURL(videoData.currentVideoURL, recordingDelegate: videoDelegate)
+
     }
     
     func videoEnded(){
@@ -247,16 +265,47 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     
-    @IBAction func photoButtonPressed(sender: AnyObject) {
-        
-        if captureDevice!.adjustingFocus == true{
-            self.captureDevice!.addObserver(self, forKeyPath: "adjustingFocus", options: .New, context: nil)
-        } else{
-            pictureTaken()
+    @IBAction func photoButtonPressed(sender: AnyObject?) {
+        if takingVideo{
+            takingVideo = false
+            dispatch_block_cancel(videoTimedOutBlock)
+            videoEnded()
+        }else{
+            dispatch_block_cancel(startTakingVideoBlock)
+            takingVideo = false
+            if captureDevice!.adjustingFocus == true{
+                self.captureDevice!.addObserver(self, forKeyPath: "adjustingFocus", options: .New, context: nil)
+            } else{
+                pictureTaken()
+            }
         }
+        
+        
+
         
     }
     
+    @IBAction func touchUpOutsidePressed(sender: AnyObject) {
+        photoButtonPressed(sender)
+    }
+    
+    @IBAction func touchDownPhotoButton(sender: AnyObject) {
+        takingVideo = false
+        
+        let videoNoLongerTooShortBlock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS) {
+            self.videoTooShort = false
+        }
+        
+        startTakingVideoBlock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS) {
+            self.takingVideo = true
+            self.videoTooShort = true
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(self.minVideoLengthInSeconds * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), videoNoLongerTooShortBlock)
+            self.videoTaken()
+        }
+        
+    
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(videoOrImageDelayInMSec * NSEC_PER_MSEC)), dispatch_get_main_queue(), startTakingVideoBlock)
+    }
     
 
     @IBAction func uploadButtonPressed(sender: AnyObject) {
@@ -290,8 +339,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     func hidePreviewView(bool: Bool){
         takePhotoButton.hidden = bool
+        takePhotoButton.enabled = !bool
         flipButton.hidden = bool
-        takeVideoButton.hidden = bool
     }
     
     
@@ -387,10 +436,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         print("donerecording")
         
         // todo handle any error!!!
+        if videoTooShort {
+            print("videoTooShort")
+            takingVideo = false
+            photoButtonPressed(nil)
+        }else{
+            print("videoNotTooShort")
+            imageData = NSData(contentsOfURL: outputFileURL)
+            medType = mediaType.video
+            playBackVideo(outputFileURL)
+        }
 
-        imageData = NSData(contentsOfURL: outputFileURL)
-        medType = mediaType.video
-        playBackVideo(outputFileURL)
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
@@ -435,20 +491,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         return data
     }
     
-
-    @IBAction func takeVideoPressed(sender: AnyObject?) {
-        if takingVideo{
-            takingVideo = false
-            takeVideoButton.setTitle("TakeVideo", forState: UIControlState.Normal)
-            videoEnded()
-        }else {
-            takingVideo = true
-            takeVideoButton.setTitle("EndVideo", forState: UIControlState.Normal)
-            videoTaken()
-
-        }
-        
-    }
     
     
     func setupButtons(){
