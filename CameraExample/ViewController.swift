@@ -42,11 +42,15 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     var medType : mediaType!
     
+    var circleView : CircleView!
+    
     let videoMaxTimeInSeconds : Double = 8.0
     
     let videoOrImageDelayInMSec : UInt64 = 500
     
     let minVideoLengthInSeconds : Double = 1.0
+    
+    let circleSize : CGSize = CGSize(width: 30.0, height: 30.0)
     
     @IBOutlet var uploadedLabel: UILabel!
    
@@ -54,7 +58,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
   
     @IBOutlet var flipButton: UIButton!
     
-    @IBOutlet var takePhotoButton: UIButton!
+    var capturePhotoButton = UIButton(type: UIButtonType.Custom) as UIButton
     
     @IBOutlet var cancelPhotoButton: UIButton!
     
@@ -74,12 +78,28 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     var videoTimedOutBlock: dispatch_block_t!
     
     var videoTooShort : Bool = true
+
+    var downTapGestureRecognizer : UIGestureRecognizer!
+    
+    var upTapGestureRecognizer : UIGestureRecognizer!
+    
+    var isButtonShrunk : Bool? = false
+    
+    var capturePhotoButtonCenter : CGPoint!
+    var offsetX : CGFloat!
+    var offsetY : CGFloat!
     
     enum CameraType {
         case front
         case back
     }
     
+    
+    let photoCaptureButton: UIButton! = UIButton(type: UIButtonType.Custom) as UIButton
+    
+    func testButtonTest(sender: AnyObject){
+        print("tested")
+    }
 
 
     override func viewDidLoad() {
@@ -96,16 +116,19 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         setupButtons()
         
-        
+        takenImageView.contentMode = UIViewContentMode.ScaleAspectFill
 
         
-
         selectBackCamera()
         hideTakenPictureView(true)
         uploadedLabel.hidden = true
     
         beginSession()
+        
     }
+    
+
+
     
 
     
@@ -180,8 +203,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     func videoEnded(){
+        // hide background buttons and preview
+        hidePreviewView(true)
+        hideTakenPictureView(false)
+        
+        
+        
         self.videoOutput?.stopRecording()
-
     }
     
     
@@ -265,13 +293,22 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     
-    @IBAction func photoButtonPressed(sender: AnyObject?) {
+    func photoButtonPressed(sender: AnyObject?) {
         if takingVideo{
+            
             takingVideo = false
+
+
             dispatch_block_cancel(videoTimedOutBlock)
+            
+            
             videoEnded()
         }else{
-            dispatch_block_cancel(startTakingVideoBlock)
+            
+            if startTakingVideoBlock != nil {
+                dispatch_block_cancel(startTakingVideoBlock)
+            }
+            
             takingVideo = false
             if captureDevice!.adjustingFocus == true{
                 self.captureDevice!.addObserver(self, forKeyPath: "adjustingFocus", options: .New, context: nil)
@@ -280,18 +317,16 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             }
         }
         
-        
-
-        
     }
     
-    @IBAction func touchUpOutsidePressed(sender: AnyObject) {
+    func touchUpOutsidePressed(sender: AnyObject) {
         photoButtonPressed(sender)
     }
     
-    @IBAction func touchDownPhotoButton(sender: AnyObject) {
+    func touchDownPhotoButton(sender: AnyObject) {
         takingVideo = false
-        
+        let expandDur = Double(self.videoOrImageDelayInMSec) / 1000.0
+        self.circleView.startTakingPictureAnimations(expandDur, shrinkDur: videoMaxTimeInSeconds + 1)
         let videoNoLongerTooShortBlock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS) {
             self.videoTooShort = false
         }
@@ -299,6 +334,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         startTakingVideoBlock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS) {
             self.takingVideo = true
             self.videoTooShort = true
+            
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(self.minVideoLengthInSeconds * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), videoNoLongerTooShortBlock)
             self.videoTaken()
         }
@@ -327,6 +363,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     
     func backToSession(){
+        resetCapturePhotoButton()
         if player != nil{
             stopPlayBackVideo()
         }
@@ -338,9 +375,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     func hidePreviewView(bool: Bool){
-        takePhotoButton.hidden = bool
-        takePhotoButton.enabled = !bool
+        capturePhotoButton.hidden = bool
+        capturePhotoButton.enabled = !bool
         flipButton.hidden = bool
+    }
+    
+    
+    func resetCapturePhotoButton(){
+        capturePhotoButton.center = capturePhotoButtonCenter
+        circleView.reset(true)
+        
+        // add way to see if button animation ran fully keeps reset animation from "ressetting red" if no red showed in the first place
     }
     
     
@@ -455,11 +500,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
     
     func playBackVideo(url: NSURL){
-        // hide background buttons and preview
-        
-        hidePreviewView(true)
-        hideTakenPictureView(false)
         stopRunningPreviewSession()
+        
         
         player = AVPlayer(URL: url)
         playerLayer = AVPlayerLayer(player: player)
@@ -493,13 +535,123 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     
     
+    
     func setupButtons(){
-        //!!! SetupButtons
+        //capturePhotoButton
+        
+        let heightAndWidth = view.frame.width / (3.0)
+        let halfHW = heightAndWidth / 2
+        let buttonFrame = CGRect(x: (view.frame.width / 2) - halfHW, y: view.frame.height - heightAndWidth - 20, width: heightAndWidth, height: heightAndWidth)
+        
+    
+        
+        
+        
+        let pan = UIPanGestureRecognizer(target: self, action: "moveButtonWithFinger:")
+        
+        capturePhotoButton.addGestureRecognizer(pan)
+        
+        capturePhotoButton.frame = buttonFrame
+        capturePhotoButtonCenter = capturePhotoButton.center
+        capturePhotoButton.backgroundColor = .clearColor()
+        capturePhotoButton.addTarget(self, action: "photoButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        capturePhotoButton.addTarget(self, action: "photoButtonPressed:", forControlEvents: .TouchUpOutside)
+        capturePhotoButton.addTarget(self, action: "touchDownPhotoButton:", forControlEvents: .TouchDown)
+        //self.capturePhotoButton.addTarget(self, action: Selector("settingsButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(capturePhotoButton)
+        
+       // capturePhotoButton.setTitle(nil, forState: .Normal)
+        let frame = CGRect(x: 0, y: 0, width:capturePhotoButton.frame.width, height:capturePhotoButton.frame.height)
+        circleView = CircleView(frame: frame)
+        circleView.userInteractionEnabled = false
+        circleView.exclusiveTouch = false
+        capturePhotoButton.addSubview(circleView)
+        
+        
+        
+        
+        //capturePhotoButton.bringSubviewToFront(circleView)
+        
     }
+    
+    func settingsButtonPressed(sender:UIButton!){
+        print("Settings selected")
+    }
+
     
     func loopVideo(notification: NSNotification) {
         self.player?.seekToTime(kCMTimeZero)
         self.player?.play()
+    }
+    
+    
+    
+    func startCircleAnimationAtPoint(){
+        
+        circleView.rotateAndShrinkCircleView(6.0, shrinkDuration: self.videoMaxTimeInSeconds)
+    }
+    
+    func moveButtonWithFinger(sender: UIPanGestureRecognizer) {
+        switch sender.state{
+            
+        case .Began:
+            print("panStarted")
+            let panOffsetPoint = sender.locationInView(self.view)
+            offsetX = capturePhotoButtonCenter.x - panOffsetPoint.x
+            offsetY = capturePhotoButtonCenter.y - panOffsetPoint.y
+        case .Ended:
+            // move button back to center ideally TODO or hide button!!!
+            self.photoButtonPressed(nil)
+            isButtonShrunk = nil
+            
+        case .Changed:
+            //circleView.printBounds()
+            let point = sender.locationInView(self.view)
+            let x = point.x + offsetX
+            let y = point.y + offsetY
+            let distanceFromCenter = distance(x, y: y, a: capturePhotoButtonCenter.x, b:  capturePhotoButtonCenter.y)
+            
+            if isButtonShrunk != nil{
+                if isButtonShrunk!{
+                    if distanceFromCenter <= 20 {
+                        isButtonShrunk = false
+                        let from = Double(circleView.getCurrentAnimationScale())
+                        print("\(isButtonShrunk) From:" + "\(from)")
+                        
+                        circleView.shrinkCircleView(0.5, to: 1.2)
+                        
+                        
+                    }
+
+                }else {
+                    if distanceFromCenter > 20 {
+                        isButtonShrunk = true
+                        let from = Double(circleView.getCurrentAnimationScale())
+                        print(from)
+                        print("\(isButtonShrunk) From:" + "\(from)")
+                        circleView.shrinkCircleView(0.5, to: 0.67)
+                        
+                        
+                    }
+                    
+                }
+                
+            } else{
+                if distanceFromCenter > 20{
+                    isButtonShrunk = false
+                }
+            }
+            
+            capturePhotoButton.center = CGPoint(x: x, y: y)
+            
+        default:
+            print(sender.state)
+            
+        }
+    }
+    
+    func distance(x: CGFloat, y: CGFloat, a: CGFloat, b: CGFloat) -> CGFloat{
+        return sqrt(pow((x - a),2) + pow((y - b),2))
     }
     
 }

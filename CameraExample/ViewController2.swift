@@ -12,6 +12,9 @@ import Alamofire
 import AssetsLibrary
 
 
+let upVoteColor = UIColor.orangeColor()
+let downVoteColor = UIColor.lightGrayColor()
+let baseColor = UIColor(red: 0, green: 0.5216, blue: 0.9765, alpha: 1.0)
 
 
 
@@ -41,9 +44,7 @@ class ViewController2: UIViewController, ViewController2Delegate {
     var nextImageViewNode: mediaNode?
     var currentImageViewNode: mediaNode!
     var sortingMethod: sortingStyles = .top
-    let upVoteColor = UIColor.orangeColor()
-    let downVoteColor = UIColor.lightGrayColor()
-    let baseColor = UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 1.0)
+
     let loadQueueSize = 2
     
     
