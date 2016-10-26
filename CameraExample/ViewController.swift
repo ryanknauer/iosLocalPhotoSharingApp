@@ -116,7 +116,12 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         setupButtons()
         
-        takenImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        self.view.backgroundColor = UIColor.whiteColor()
+        takenImageView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
+        takenImageView.bounds = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
+        self.view.clipsToBounds = true
+        self.view.layer.masksToBounds = true
+        takenImageView.contentMode = UIViewContentMode.ScaleToFill
 
         
         selectBackCamera()
@@ -505,7 +510,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         player = AVPlayer(URL: url)
         playerLayer = AVPlayerLayer(player: player)
-        playerLayer!.frame = self.view.bounds
+        let layerFrame = takenImageView.bounds
+        let layerBounds = takenImageView.bounds
+        let layerPosition = takenImageView.layer.position
+        playerLayer!.frame = layerFrame
+        playerLayer!.bounds = layerBounds
+        playerLayer!.position = layerPosition
+        //playerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "loopVideo:",
             name: AVPlayerItemDidPlayToEndTimeNotification,
             object: self.player!.currentItem)
@@ -615,12 +627,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
                 if isButtonShrunk!{
                     if distanceFromCenter <= 20 {
                         isButtonShrunk = false
-                        let from = Double(circleView.getCurrentAnimationScale())
-                        print("\(isButtonShrunk) From:" + "\(from)")
-                        
                         circleView.shrinkCircleView(0.5, to: 1.2)
-                        
-                        
                     }
 
                 }else {
