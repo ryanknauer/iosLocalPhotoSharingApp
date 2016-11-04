@@ -9,10 +9,12 @@ Since the servers are in production I have uploaded demo gifs below!
 
 Some plans for future features are:
 - adding text/drawing to uploaded photos
-- adding videos
-- adding gesture controls instead of buttons
+- ~~adding videos~~   Videos Added!
+- ~~adding gesture controls instead of buttons~~ Done! (possible changes to be made still)
 
 Thanks for checking out my project! 
+
+*Gifs are out of date have redisgined the photo button and a few other changes!
 
 ![Output sample](http://i.giphy.com/GqtXRNyfMqMow.gif) 
 
