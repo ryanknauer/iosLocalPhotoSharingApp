@@ -14,7 +14,7 @@ Some plans for future features are:
 
 Thanks for checking out my project! 
 
-*Gifs are out of date have redisgined the photo button and a few other changes!
+*Gifs are out of date. Have redisgined the photo button and added many ui changes!
 
 ![Output sample](http://i.giphy.com/GqtXRNyfMqMow.gif) 
 
