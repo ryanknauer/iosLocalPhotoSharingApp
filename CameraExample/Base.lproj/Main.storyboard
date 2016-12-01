@@ -15,6 +15,33 @@
             </objects>
             <point key="canvasLocation" x="573" y="-496"/>
         </scene>
+        <!--User Info View Controller-->
+        <scene sceneID="zVs-vV-MJP">
+            <objects>
+                <viewController storyboardIdentifier="UserInfoViewController" id="7kM-eZ-q06" customClass="userInfoViewController" customModule="CameraExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="e2r-BU-YNz"/>
+                        <viewControllerLayoutGuide type="bottom" id="3Dz-y9-IG1"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="hxf-62-edm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4AX-h0-UvQ">
+                                <rect key="frame" x="41" y="28" width="30" height="30"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <segue destination="FYX-0t-eIo" kind="unwind" unwindAction="unwindToVC:" id="Q2i-ex-98c"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="caa-2r-Cnw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="FYX-0t-eIo" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-442" y="268"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -27,9 +54,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KXX-Bv-tfd">
-                                <rect key="frame" x="-5" y="0.0" width="605" height="600"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0mf-2r-mn6">
                                 <rect key="frame" x="530" y="20" width="30" height="30"/>
                                 <state key="normal" title="Flip!"/>
@@ -44,46 +68,72 @@
                                     <action selector="goBackToSession:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bxi-hT-bUL"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q26-nq-etG">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q26-nq-etG">
                                 <rect key="frame" x="506" y="514" width="54" height="30"/>
                                 <state key="normal" title="Upload!"/>
                                 <connections>
                                     <action selector="uploadButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fB7-eu-P2d"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Uploaded!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QfX-2u-uDx">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Uploaded!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QfX-2u-uDx">
                                 <rect key="frame" x="257" y="257" width="80" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iXK-Ol-ehs">
+                                <rect key="frame" x="94" y="20" width="63" height="30"/>
+                                <state key="normal" title="User Info"/>
+                                <connections>
+                                    <segue destination="7kM-eZ-q06" kind="presentation" identifier="segueToUserInfo" animates="NO" modalPresentationStyle="overCurrentContext" id="LsR-uw-ylg"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="QfX-2u-uDx" firstAttribute="centerX" secondItem="KXX-Bv-tfd" secondAttribute="centerX" id="2A8-4h-iJ7"/>
-                            <constraint firstItem="KXX-Bv-tfd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-25" id="6pU-M8-LDD"/>
                             <constraint firstItem="q26-nq-etG" firstAttribute="trailing" secondItem="0mf-2r-mn6" secondAttribute="trailing" id="CCa-Ll-qpH"/>
                             <constraint firstItem="0mf-2r-mn6" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Dzv-bP-iO9"/>
-                            <constraint firstItem="q26-nq-etG" firstAttribute="top" secondItem="KXX-Bv-tfd" secondAttribute="bottom" constant="-86" id="QrC-9H-SRj"/>
-                            <constraint firstItem="QfX-2u-uDx" firstAttribute="centerY" secondItem="KXX-Bv-tfd" secondAttribute="centerY" id="WLq-Ye-pbs"/>
-                            <constraint firstItem="KXX-Bv-tfd" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="ZPt-fz-ujC"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0mf-2r-mn6" secondAttribute="trailing" constant="20" id="b0q-xB-pgT"/>
-                            <constraint firstItem="q26-nq-etG" firstAttribute="leading" secondItem="KXX-Bv-tfd" secondAttribute="trailing" constant="-94" id="bp1-AN-Rb6"/>
-                            <constraint firstItem="KXX-Bv-tfd" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="cXu-tn-meW"/>
-                            <constraint firstAttribute="trailing" secondItem="KXX-Bv-tfd" secondAttribute="trailing" id="kgh-eg-N4y"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cancelPhotoButton" destination="2mM-fI-BUL" id="kLL-dc-gna"/>
                         <outlet property="flipButton" destination="0mf-2r-mn6" id="Ouu-yf-unX"/>
-                        <outlet property="takenImageView" destination="KXX-Bv-tfd" id="sHp-im-Lal"/>
                         <outlet property="uploadPhotoButton" destination="q26-nq-etG" id="hZ8-mi-XOU"/>
                         <outlet property="uploadedLabel" destination="QfX-2u-uDx" id="vwD-ud-cnB"/>
+                        <segue destination="uUT-2e-Fmx" kind="presentation" identifier="segueToSignIn" animates="NO" modalPresentationStyle="overCurrentContext" id="pZA-Ys-xc5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="277" y="283"/>
+            <point key="canvasLocation" x="277" y="268"/>
+        </scene>
+        <!--Sign In View Controller-->
+        <scene sceneID="hdk-2Q-8a3">
+            <objects>
+                <viewController id="uUT-2e-Fmx" customClass="signInViewController" customModule="CameraExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fUQ-ZT-Vd8"/>
+                        <viewControllerLayoutGuide type="bottom" id="wnk-RJ-sVL"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="17l-Xu-u0m">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0PN-Vb-RcN">
+                                <rect key="frame" x="31" y="28" width="30" height="30"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <segue destination="nr5-Rp-2h7" kind="unwind" identifier="signInToMain" animates="NO" unwindAction="unwindToVC:" id="o1G-wR-Qf9"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LCc-aj-QTT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="nr5-Rp-2h7" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="299" y="1037"/>
         </scene>
         <!--Comments View Controller-->
         <scene sceneID="Q11-uq-pkc">
@@ -183,7 +233,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B11-dH-VbZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="5pB-Sm-lgq" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1809" y="261"/>
+            <point key="canvasLocation" x="1835" y="268"/>
         </scene>
         <!--View Controller2-->
         <scene sceneID="nv7-Oa-HDL">

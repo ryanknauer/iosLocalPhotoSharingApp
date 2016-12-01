@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import Alamofire
 
 //let User = "ryan"
 //let Password = "asdf1234"
@@ -25,6 +26,7 @@ class userClass: NSObject, CLLocationManagerDelegate{
     var latitude: String?
     var longitude: String?
     var locationManager: CLLocationManager?
+    var authToken : String?
     
     init(username: String, pswd: String){
         userName = username
@@ -87,6 +89,49 @@ class userClass: NSObject, CLLocationManagerDelegate{
         print("hi")
     }
     
+    
+    func getToken(){
+        let paramaters = [
+            "username" : self.userName,
+            "password" : self.password
+        ]
+        let URL = baseHTTPURL + "get-token/"
+        Alamofire.request(.POST,  URL, parameters: paramaters)
+            .validate().responseJSON { response in
+                print(response.request)  // original URL request
+                print(response.response) // URL response
+                print(response.data)     // server data
+                print(response.result.value)   // result of response serialization
+                
+                switch response.result{
+                case .Success(let data):
+                    self.parseToken(response.data)
+                case .Failure(let error):
+                    // !!! Figure out why!
+                    print("userDNE")
+                }
+        
+        }
+    
+    }
+    
+    func verifyToken() -> Bool{
+        // !!! return if token is still valid or not
+        return true 
+    }
+        
+        
+    func parseToken(Data : NSData?){
+        do {
+            let JSON = try NSJSONSerialization.JSONObjectWithData(Data!, options: .AllowFragments)
+            self.authToken = JSON["token"] as! String
+        } catch {
+            // !!! catch json error
+        }
+    }
+    
 }
+
+
 
 

@@ -16,6 +16,8 @@
 		A84543061D69933F00A87648 /* QueueDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543041D69933F00A87648 /* QueueDefinition.swift */; };
 		A84543081D69A6C500A87648 /* SetupImagesFromServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */; };
 		A84543091D69A6C500A87648 /* SetupImagesFromServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */; };
+		A846CE441DDAB689001E2CDF /* signInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846CE431DDAB689001E2CDF /* signInViewController.swift */; };
+		A846CE461DDAB7B5001E2CDF /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846CE451DDAB7B5001E2CDF /* GlobalVariables.swift */; };
 		A8849BD51DA83E11008376B7 /* videoDirectory in Resources */ = {isa = PBXBuildFile; fileRef = A8849BD41DA83E11008376B7 /* videoDirectory */; };
 		A8849BD71DA8413A008376B7 /* videoClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8849BD61DA8413A008376B7 /* videoClass.swift */; };
 		A895A6E01D2DB91800F85476 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A895A6DF1D2DB91800F85476 /* AppDelegate.swift */; };
@@ -26,7 +28,10 @@
 		A895A6F51D2DB91800F85476 /* CameraExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A895A6F41D2DB91800F85476 /* CameraExampleTests.swift */; };
 		A895A7001D2DB91800F85476 /* CameraExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A895A6FF1D2DB91800F85476 /* CameraExampleUITests.swift */; };
 		A8AC48461DB58437008C6D96 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AC48451DB58437008C6D96 /* CircleView.swift */; };
+		A8BA97BB1DE3BFAB00D3E29E /* userInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BA97BA1DE3BFAB00D3E29E /* userInfoViewController.swift */; };
 		A8BC75A21D7A0D2400E4AA63 /* commentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BC75A11D7A0D2400E4AA63 /* commentsViewController.swift */; };
+		A8C176301DDD595B000991FE /* userAndPasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C1762F1DDD595B000991FE /* userAndPasswordField.swift */; };
+		A8C176321DDD64FD000991FE /* slideAnimtationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C176311DDD64FD000991FE /* slideAnimtationProtocol.swift */; };
 		A8F84D621D738BBD001A5B55 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F84D611D738BBD001A5B55 /* PageViewController.swift */; };
 		FBBCC9C5E2F209760B5BE1C1 /* Pods_CameraExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8268C32B0CCB18C45FA5D0B6 /* Pods_CameraExample.framework */; };
 /* End PBXBuildFile section */
@@ -61,6 +66,8 @@
 		A84543021D69095C00A87648 /* ViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
 		A84543041D69933F00A87648 /* QueueDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueDefinition.swift; sourceTree = "<group>"; };
 		A84543071D69A6C500A87648 /* SetupImagesFromServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupImagesFromServer.swift; sourceTree = "<group>"; };
+		A846CE431DDAB689001E2CDF /* signInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = signInViewController.swift; sourceTree = "<group>"; };
+		A846CE451DDAB7B5001E2CDF /* GlobalVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
 		A8849BD41DA83E11008376B7 /* videoDirectory */ = {isa = PBXFileReference; lastKnownFileType = folder; name = videoDirectory; path = ../videoDirectory; sourceTree = "<group>"; };
 		A8849BD61DA8413A008376B7 /* videoClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = videoClass.swift; sourceTree = "<group>"; };
 		A895A6DC1D2DB91800F85476 /* CameraExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,7 +84,10 @@
 		A895A6FF1D2DB91800F85476 /* CameraExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraExampleUITests.swift; sourceTree = "<group>"; };
 		A895A7011D2DB91800F85476 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A8AC48451DB58437008C6D96 /* CircleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
+		A8BA97BA1DE3BFAB00D3E29E /* userInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = userInfoViewController.swift; sourceTree = "<group>"; };
 		A8BC75A11D7A0D2400E4AA63 /* commentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = commentsViewController.swift; sourceTree = "<group>"; };
+		A8C1762F1DDD595B000991FE /* userAndPasswordField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = userAndPasswordField.swift; sourceTree = "<group>"; };
+		A8C176311DDD64FD000991FE /* slideAnimtationProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = slideAnimtationProtocol.swift; sourceTree = "<group>"; };
 		A8F84D611D738BBD001A5B55 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		A8FAFAE91DBDF38600CBC640 /* visualTestingPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = visualTestingPlayground.playground; sourceTree = "<group>"; };
 		AB3DDC6E3EE92324943555EB /* Pods-CameraExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CameraExampleTests/Pods-CameraExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -158,6 +168,8 @@
 				A895A6DF1D2DB91800F85476 /* AppDelegate.swift */,
 				A895A6E11D2DB91800F85476 /* ViewController.swift */,
 				A8AC48451DB58437008C6D96 /* CircleView.swift */,
+				A846CE431DDAB689001E2CDF /* signInViewController.swift */,
+				A846CE451DDAB7B5001E2CDF /* GlobalVariables.swift */,
 				A895A6E31D2DB91800F85476 /* Main.storyboard */,
 				A8BC75A11D7A0D2400E4AA63 /* commentsViewController.swift */,
 				A8F84D611D738BBD001A5B55 /* PageViewController.swift */,
@@ -167,6 +179,9 @@
 				A895A6EB1D2DB91800F85476 /* Info.plist */,
 				A8849BD61DA8413A008376B7 /* videoClass.swift */,
 				A8FAFAE91DBDF38600CBC640 /* visualTestingPlayground.playground */,
+				A8C1762F1DDD595B000991FE /* userAndPasswordField.swift */,
+				A8C176311DDD64FD000991FE /* slideAnimtationProtocol.swift */,
+				A8BA97BA1DE3BFAB00D3E29E /* userInfoViewController.swift */,
 			);
 			path = CameraExample;
 			sourceTree = "<group>";
@@ -466,15 +481,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				A840A3961D8AA12E00C12567 /* userClass.swift in Sources */,
+				A8BA97BB1DE3BFAB00D3E29E /* userInfoViewController.swift in Sources */,
 				A84543081D69A6C500A87648 /* SetupImagesFromServer.swift in Sources */,
 				A8BC75A21D7A0D2400E4AA63 /* commentsViewController.swift in Sources */,
 				A895A6E21D2DB91800F85476 /* ViewController.swift in Sources */,
+				A846CE441DDAB689001E2CDF /* signInViewController.swift in Sources */,
 				A895A6E01D2DB91800F85476 /* AppDelegate.swift in Sources */,
 				A8F84D621D738BBD001A5B55 /* PageViewController.swift in Sources */,
+				A8C176321DDD64FD000991FE /* slideAnimtationProtocol.swift in Sources */,
 				A8AC48461DB58437008C6D96 /* CircleView.swift in Sources */,
 				A840A3981D8BBADA00C12567 /* imageNode.swift in Sources */,
 				A84543051D69933F00A87648 /* QueueDefinition.swift in Sources */,
+				A846CE461DDAB7B5001E2CDF /* GlobalVariables.swift in Sources */,
 				A8849BD71DA8413A008376B7 /* videoClass.swift in Sources */,
+				A8C176301DDD595B000991FE /* userAndPasswordField.swift in Sources */,
 				A84543031D69095C00A87648 /* ViewController2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

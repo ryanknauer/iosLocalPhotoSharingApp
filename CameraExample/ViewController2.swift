@@ -12,10 +12,6 @@ import Alamofire
 import AssetsLibrary
 
 
-let upVoteColor = UIColor.orangeColor()
-let downVoteColor = UIColor.lightGrayColor()
-let baseColor = UIColor(red: 0, green: 0.5216, blue: 0.9765, alpha: 1.0)
-
 
 
 class ViewController2: UIViewController, ViewController2Delegate {
@@ -68,17 +64,33 @@ class ViewController2: UIViewController, ViewController2Delegate {
         view.addGestureRecognizer(downSwipe)
         
         
+        
         //playerLayer = CALayer()
         
         //buttonImageView.layer.addSublayer(playerLayer)
         
         setupImagesFromServer()
     }
+    
+    
+    override func viewDidAppear(animated: Bool) {
+        if currentImageViewNode?.medType == mediaType.video{
+            playerLayer?.player?.play()
+        }
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        if currentImageViewNode?.medType == mediaType.video{
+
+            playerLayer?.player?.pause()
+        }
+    }
         
     
     @IBAction func unwindToVC(segue: UIStoryboardSegue) {
         hideAllButtons(false)
     }
+
 
     
 
@@ -379,6 +391,7 @@ class ViewController2: UIViewController, ViewController2Delegate {
         if segue.identifier == "toCommentsSegue"{
             if let destination = segue.destinationViewController as? commentsViewController{
                 destination.snippetID = String(self.currentImageViewNode.id)
+                
             }
         }
     }

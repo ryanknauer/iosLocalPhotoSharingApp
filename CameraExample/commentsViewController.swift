@@ -25,14 +25,13 @@ class commentsViewController: UIViewController, UITableViewDelegate, UITableView
     
     var snippetID = "9"
     
-    let backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.5)
+    
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-            //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         self.view.addGestureRecognizer(tap)
         
@@ -41,14 +40,13 @@ class commentsViewController: UIViewController, UITableViewDelegate, UITableView
 
         
         
-        self.view.backgroundColor = backgroundColor
-        self.messagesTable.backgroundColor = backgroundColor
+        self.view.backgroundColor = popOverOpaqueBackgroundColor
+        self.messagesTable.backgroundColor = popOverOpaqueBackgroundColor
         
         updateArray()
         self.messagesTable.delegate = self
         self.messagesTable.dataSource = self
         print(messagesArray)
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -83,7 +81,6 @@ class commentsViewController: UIViewController, UITableViewDelegate, UITableView
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func updateArray(){
@@ -204,7 +201,6 @@ class commentsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
         bottomCommentView.endEditing(true)
     }
     

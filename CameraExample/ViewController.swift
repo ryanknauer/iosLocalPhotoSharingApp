@@ -11,8 +11,7 @@ import AVFoundation
 import Alamofire
 import AssetsLibrary
 
-var User : userClass!
-let baseHTTPURL: String = "http://192.168.0.110:8000/" //"http://192.168.0.110:8000/" //"http://128.189.85.73:8000/" //"http://128.189.86.246:8000/" //"http://172.20.10.3:8000/"  //"http://192.168.0.110:8000/"   "http://192.168.0.110:8000/"
+
 
 class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
@@ -54,7 +53,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     @IBOutlet var uploadedLabel: UILabel!
    
-    @IBOutlet var takenImageView: UIImageView!
+    var takenImageView: UIImageView = UIImageView()
   
     @IBOutlet var flipButton: UIButton!
     
@@ -85,9 +84,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     var isButtonShrunk : Bool? = false
     
+    
+    
     var capturePhotoButtonCenter : CGPoint!
     var offsetX : CGFloat!
     var offsetY : CGFloat!
+    var sequeToSignIn : UIStoryboardSegue!
+    var signedIn = false
     
     enum CameraType {
         case front
@@ -97,6 +100,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     let photoCaptureButton: UIButton! = UIButton(type: UIButtonType.Custom) as UIButton
     
+    var takingButtonsArray : [UIButton]!
+    var takenButtonsArray : [UIButton]!
+    var currentButtons : [UIButton] = []
+    
     func testButtonTest(sender: AnyObject){
         print("tested")
     }
@@ -105,8 +112,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        takingButtonsArray = [capturePhotoButton, flipButton]
+        takenButtonsArray = [uploadPhotoButton, cancelPhotoButton]
+        currentButtons = takingButtonsArray
+        
         User = userClass(username: "ryan", pswd: "asdf1234")
         
+        //setup flip camera gesture rec.
         doubleTapToFlip = UITapGestureRecognizer(target: self, action: "flipPressed:")
         doubleTapToFlip.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(doubleTapToFlip)
@@ -116,19 +128,26 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         setupButtons()
         
-        self.view.backgroundColor = UIColor.whiteColor()
-        takenImageView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
-        takenImageView.bounds = CGRectMake(0, 0, self.view.frame.width, self.view.frame.size.height)
-        self.view.clipsToBounds = true
-        self.view.layer.masksToBounds = true
-        takenImageView.contentMode = UIViewContentMode.ScaleToFill
+        self.view.backgroundColor = UIColor.blackColor()
+        let frameWidth = self.view.frame.width
+        let frameHeight = self.view.frame.height
+        takenImageView.frame = CGRectMake(0, 0, frameWidth, frameHeight)
+        takenImageView.bounds = CGRectMake(0, 0, frameWidth, frameHeight)
+        //self.view.clipsToBounds = true
+        //self.view.layer.masksToBounds = true
+        takenImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        self.view.addSubview(takenImageView)
+        self.view.sendSubviewToBack(takenImageView)
 
         
         selectBackCamera()
         hideTakenPictureView(true)
         uploadedLabel.hidden = true
-    
         beginSession()
+        
+        
+
+
         
     }
     
@@ -138,10 +157,45 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
     
     override func viewDidAppear(animated: Bool) {
-        
+        dispatch_async(dispatch_get_main_queue()){
+            if (!self.signedIn){
+                self.bringUpSignIn()
+            }
+        }
     }
     
     
+    @IBAction func unwindToVC(segue: UIStoryboardSegue) {
+        for b in currentButtons { slideInAnimation(b, inFrom: closestEdge(b), slideOut: false)}
+    }
+    
+    
+    func bringUpSignIn(){
+        performSegueWithIdentifier("segueToSignIn", sender: nil)
+    }
+    
+    func closestEdge(v : UIView) -> screenSide{
+        let centerX = v.center.x
+        let centerY = v.center.y
+        let distToFarSide = self.view.frame.width - centerX
+        let distToBottom = self.view.frame.height - centerY
+        let distToTop = self.view.frame.height - distToBottom
+        let distToNearSide = self.view.frame.width - distToFarSide
+        switch min(distToTop, distToFarSide, distToBottom, distToNearSide){
+        case distToTop:
+            return screenSide.top
+        case distToBottom:
+            return screenSide.bottom
+        case distToFarSide:
+            return screenSide.right
+        case distToNearSide:
+            return screenSide.left
+        default:
+            print("defualt shouldn't be hit!")
+            return screenSide.right
+        }
+    }
+
 
     func stopRunningPreviewSession(){
          captureSession.stopRunning()
@@ -214,6 +268,8 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         
         
+        
+        
         self.videoOutput?.stopRecording()
     }
     
@@ -239,15 +295,18 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
                     
                     self.takenImageView.image = self.capturedImage
                     
+                    
+                    
                 } else {
                     // TODO!!! Handle error when no picture grabbed
                 }
             })
         }
         
-        //set buttons & end preview3
+        //set buttons & end preview
         hidePreviewView(true)
         hideTakenPictureView(false)
+        
         stopRunningPreviewSession()
     }
     
@@ -377,12 +436,16 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         imageData = nil
         hidePreviewView(false)
         hideTakenPictureView(true)
+        
     }
     
     func hidePreviewView(bool: Bool){
         capturePhotoButton.hidden = bool
         capturePhotoButton.enabled = !bool
         flipButton.hidden = bool
+        if !bool{
+            currentButtons = takingButtonsArray
+        }
     }
     
     
@@ -399,6 +462,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         cancelPhotoButton.hidden = bool
         uploadPhotoButton.hidden = bool
         doubleTapToFlip.enabled = bool
+        if !bool{
+            currentButtons = takenButtonsArray
+        }
 //        if bool{
 //            self.view.addGestureRecognizer(doubleTapToFlip)
 //        }else{
@@ -510,13 +576,13 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         player = AVPlayer(URL: url)
         playerLayer = AVPlayerLayer(player: player)
-        let layerFrame = takenImageView.bounds
+        let layerFrame = takenImageView.frame
         let layerBounds = takenImageView.bounds
         let layerPosition = takenImageView.layer.position
         playerLayer!.frame = layerFrame
         playerLayer!.bounds = layerBounds
         playerLayer!.position = layerPosition
-        //playerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+        playerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "loopVideo:",
             name: AVPlayerItemDidPlayToEndTimeNotification,
@@ -578,10 +644,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         circleView.userInteractionEnabled = false
         circleView.exclusiveTouch = false
         capturePhotoButton.addSubview(circleView)
-        
-        
-        
-        
+    
         //capturePhotoButton.bringSubviewToFront(circleView)
         
     }
@@ -637,8 +700,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
                         print(from)
                         print("\(isButtonShrunk) From:" + "\(from)")
                         circleView.shrinkCircleView(0.5, to: 0.67)
-                        
-                        
                     }
                     
                 }
@@ -659,6 +720,16 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     func distance(x: CGFloat, y: CGFloat, a: CGFloat, b: CGFloat) -> CGFloat{
         return sqrt(pow((x - a),2) + pow((y - b),2))
+    }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "segueToSignIn" || segue.identifier == "segueToUserInfo"{
+            for b in currentButtons{
+                slideInAnimation(b, inFrom: closestEdge(b), slideOut: true)
+            }
+            print("seguingtoSignIn")
+        }
     }
     
 }
